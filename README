@@ -2,3 +2,14 @@ Set of steps for heritability analysis
 
 Keep the give structure of the raw data for
 safety of scripts usage. 
+
+Requires:
+
+#Docker
+
+####################
+#Pre-processing tasks
+####################
+
+1. Remove extra stats table in each sheet from Demographics.xlsx
+
