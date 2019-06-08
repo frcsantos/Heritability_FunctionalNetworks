@@ -5,7 +5,8 @@ safety of scripts usage.
 
 Requires:
 
-#Docker
+#Docker (for ubuntu, sudo apt-get install docker)
+#up docker file for new library
 
 ####################
 #Pre-processing tasks
