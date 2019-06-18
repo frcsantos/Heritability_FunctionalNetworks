@@ -1,7 +1,6 @@
 library("xlsx")
 library("tidyverse")
 
-setwd("~/Fer/scripts/heritability")
 Mz <- read.xlsx("../../dados/Dados/Demographics.xlsx", 1, header = T)
 Dz <- read.xlsx("../../dados/Dados/Demographics.xlsx", 2, header = T)
 pairing <- read.xlsx("../../dados/Dados/List_twin_pairs.xlsx", 1, header = F)
@@ -18,35 +17,49 @@ colnames(final_tmp) <- c("Subject_T1", "Subject_T2", "Zigosity","Family_ID","Gen
 
 #Generalize later: Rest(x), (x).csv Functions will be welcome here
 
-paths <- list.files("../../dados/Dados/Rest1", pattern="mat_conn_finn_r1.csv", recursive=T, full.names=T)
+paths1 <- list.files("../../dados/Dados/Rest1", pattern="mat_conn_finn_r1.csv", recursive=T, full.names=T)
+paths2 <- list.files("../../dados/Dados/Rest2", pattern="mat_conn_finn_r2.csv", recursive=T, full.names=T)
 #toytest:
 #paths <- c('../../dados/Dados/Rest1/All_MZ_R1/969476/mat_conn_finn_r1.csv','../../dados/Dados/Rest1/All_MZ_R1/971160/mat_conn_finn_r1.csv')
 
-rois <- data.frame(matrix(nrow= length(paths), ncol = 35778))
-aux = 1
-cnames <- c()
-rnames <- c()
-
-for (i in paths){
+dataconstruct <- function(paths) {
   
-  roisline <- c()
-  roicor <- read.csv(i, header=F)
-  if (aux == 1){
-    for (c in (1 : (ncol(roicor)-1))) {
-      for (l in ((c+1) : ncol(roicor))) {
-        cnames <- c(cnames,paste("ROI", l, c, sep="_"))
+  rois <- data.frame(matrix(nrow= length(paths), ncol = 35778))
+  aux = 1
+  cnames <- c()
+  rnames <- c()
+  
+  for (i in paths){
+    
+    roisline <- c()
+    roicor <- read.csv(i, header=F)
+    if (aux == 1){
+      for (c in (1 : (ncol(roicor)-1))) {
+        for (l in ((c+1) : ncol(roicor))) {
+          cnames <- c(cnames,paste("ROI", l, c, sep="_"))
+        }
       }
+      colnames(rois) <- cnames
     }
-    colnames(rois) <- cnames
+    ind <- lower.tri(roicor, diag=FALSE) # Miraculous function for saving time
+    roisline <- roicor[ind]
+    rnames <- c(rnames, strsplit(i,"/")[[1]][7])
+    rois[aux,] <- roisline
+    aux=aux+1
+    print (i)
   }
-  ind <- lower.tri(roicor, diag=FALSE) # Miraculous function for saving time
-  roisline <- roicor[ind]
-  rnames <- c(rnames, strsplit(i,"/")[[1]][7])
-  rois[aux,] <- roisline
-  aux=aux+1
-  print (i)
+  rownames(rois)<-rnames
+  
+  final_tmp2 <- merge(final_tmp, rois, by.x="Subject_T1", by.y=0)
+  final <- merge(final_tmp2, rois, by.x="Subject_T2", by.y=0)
+  colnames(final) <- sub ("\\.x", "_T1", colnames(final))
+  colnames(final) <- sub ("\\.y", "_T2", colnames(final))
+  return(final)
 }
-rownames(rois)<-rnames
 
-final_tmp2 <- merge(final_tmp, rois, by.x="Subject_T1", by.y=0)
-final <- merge(final_tmp2, rois, by.x="Subject_T2", by.y=0)
+R1 <- dataconstruct(paths1)
+R2 <- dataconstruct(paths2)
+
+final <- cbind(R1[,1:6],(R1[,7:ncol(R1)] + R2[,7:ncol(R2)])/2) #getting mean from R1 and R2
+
+write.table(final,"final_table", sep="\t", row.name=F, quote=F)

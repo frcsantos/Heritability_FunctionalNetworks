@@ -1,12 +1,11 @@
 Set of steps for heritability analysis
 
-Keep the give structure of the raw data for
+Keep the given structure of the raw data for
 safety of scripts usage. 
 
 Requires:
 
 #Docker (for ubuntu, sudo apt-get install docker)
-#up docker file for new library
 
 ####################
 #Pre-processing tasks
@@ -14,3 +13,10 @@ Requires:
 
 1. Remove extra stats table in each sheet from Demographics.xlsx
 
+###################
+#Usage
+###################
+
+For preprocessing, run:
+
+docker run --rm -ti -v /home/marvin/Fer:/Fer -w /Fer/scripts/heritability herit Rscript datastruct.R 
