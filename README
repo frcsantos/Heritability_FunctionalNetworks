@@ -19,4 +19,5 @@ Requires:
 
 For preprocessing, run:
 
+docker push fesantos/herit
 docker run --rm -ti -v /home/marvin/Fer:/Fer -w /Fer/scripts/heritability herit Rscript datastruct.R 
