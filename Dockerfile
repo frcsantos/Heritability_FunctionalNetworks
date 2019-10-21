@@ -18,3 +18,5 @@ RUN apt-get install -y \
 
 RUN R CMD javareconf JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/include/
 RUN Rscript -e 'install.packages(c("xlsxjars","rJava","xlsx","tidyverse","OpenMx","umx"))'
+Run Rscript -e 'install.packages(c("foreach","doParallel","iterators"))'
+
