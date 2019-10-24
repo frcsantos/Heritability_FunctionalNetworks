@@ -25,21 +25,26 @@ rois$gender1 = rois$gender2 = rois$Gender
 
 registerDoParallel(5)
 system.time({
-r <- foreach (i=1:10, .combine=rbind) %dopar%{
+r <- foreach (i=1:1000, .combine=rbind) %dopar%{
         selDVs=gsub('.{1}$','',roinames[i])
         tmp = umx_residualize(selDVs, "age", suffixes = 1:2, rois) ## Adapt script to sex and age
         roi_resid = suppressWarnings(umx_residualize(selDVs, "gender", suffixes = 1:2, tmp))
         mzData <- as.data.frame(roi_resid[roi_resid$Zigosity=="MZ",])
         dzData <- as.data.frame(roi_resid[roi_resid$Zigosity=="DZ",])
         m1 = suppressMessages(umxACEv(selDVs = selDVs, sep = "", dzData = dzData, mzData = mzData))
-        a <- m1$output$algebras$top.A_std[1]
-        c <- m1$output$algebras$top.C_std[1]
-        e <- m1$output$algebras$top.E_std[1]
-        #Also save confidence intervals
-        c(a,c,e)
+	aux <- umxCI(m1, run="yes",showErrorCodes = FALSE)
+	a <- t(as.data.frame(aux$output$confidenceIntervals[1,]))
+	c <- t(as.data.frame(aux$output$confidenceIntervals[2,]))
+	e <- t(as.data.frame(aux$output$confidenceIntervals[3,]))
+        cbind(a,c,e)
 	}
 })
 
-rownames(r) <- roinames[1:10]
-colnames(r) <- c("A","C","E")
+
+write.table(r,"univariate_safe.txt", sep="\t", row.name=T, quote=F)
+
+rownames(r) <- roinames[1:1000]
+colnames(r) <- c("lower_A","A","upper_A","lower_C","C","upper_C","lower_E","E","upper_E")
+
+write.table(r,"univariate.txt", sep="\t", row.name=T, quote=F)
 

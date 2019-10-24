@@ -7,21 +7,34 @@ Requires:
 
 #Docker (for ubuntu, sudo apt-get install docker)
 
-####################
-#Pre-processing tasks
-####################
+######################
+#Pre-processing tasks#
+######################
 
 1. Remove extra stats table in each sheet from Demographics.xlsx
 
-###################
-#Usage
-###################
-
 For preprocessing, run:
 
-docker push fesantos/herit
-docker run --rm -ti -v `pwd`:`pwd` -w ./Fer/scripts/heritability fesantos/herit Rscript datastruct.R
+$docker push fesantos/herit
+$docker run -u $(id -u):$(id -g) --rm -ti -v `pwd`:`pwd` -w `pwd` fesantos/herit Rscript datastruct.R
 
-For processing, run:
 
-docker run --rm -ti -v `pwd`:`pwd` -w ./Fer/scripts/heritability fesantos/herit Rscript processing.R
+############
+#Processing#
+############
+
+
+Test if docker image fesantos/herit is available
+$docker images | grep "fesantos/herit"
+
+If not, download image
+$docker push fesantos/herit
+
+##Univariate analysis##
+
+#Make sure the doc final_table is available at the current directory (uncompressed) and RUN:
+$screen
+#Verify if you are at the same dir
+$docker run -u $(id -u):$(id -g) --rm -ti -v `pwd`:`pwd` -w `pwd` fesantos/herit Rscript processing.R
+
+
