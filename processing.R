@@ -25,7 +25,7 @@ rois$gender1 = rois$gender2 = rois$Gender
 
 registerDoParallel(5)
 system.time({
-r <- foreach (i=1:1000, .combine=rbind) %dopar%{
+r <- foreach (i=1:length(roinames), .combine=rbind) %dopar%{
         selDVs=gsub('.{1}$','',roinames[i])
         tmp = umx_residualize(selDVs, "age", suffixes = 1:2, rois) ## Adapt script to sex and age
         roi_resid = suppressWarnings(umx_residualize(selDVs, "gender", suffixes = 1:2, tmp))
@@ -43,7 +43,7 @@ r <- foreach (i=1:1000, .combine=rbind) %dopar%{
 
 write.table(r,"univariate_safe.txt", sep="\t", row.name=T, quote=F)
 
-rownames(r) <- roinames[1:1000]
+rownames(r) <- roinames
 colnames(r) <- c("lower_A","A","upper_A","lower_C","C","upper_C","lower_E","E","upper_E")
 
 write.table(r,"univariate.txt", sep="\t", row.name=T, quote=F)
