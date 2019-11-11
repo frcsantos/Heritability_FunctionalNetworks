@@ -33,7 +33,7 @@ n=10
 nel=2
 i<-1:n
 registerDoParallel(5)
-#system.time({
+system.time({
 r <- foreach (i, .combine=rbind) %dopar%{
 	ids <- sample(colnames(rois[,7:ncol(rois)-4]), size=nel, replace=F)
         selDVs=gsub('.{1}$','',ids)
@@ -50,7 +50,9 @@ r <- foreach (i, .combine=rbind) %dopar%{
 	E=c(E,E1)
 	cbind(A,C,E)
 	}
-#})
+})
+
+write.table(r,"multivariate.txt", sep="\t", quote=F)
 
 #At=sum(A)/n
 #Ct=sum(C)/n
