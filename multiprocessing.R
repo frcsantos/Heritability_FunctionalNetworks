@@ -29,8 +29,8 @@ E1=0.0
 A=c()
 C=c()
 E=c()
-n=10
-nel=2
+n=8000
+nel=10
 #registerDoParallel(5)
 #system.time({
 #r <- foreach (i, .combine=rbind) %dopar%{
@@ -45,12 +45,13 @@ for (i in 1:n){
 	A1 = (A1+sum(diag(m1$output$algebras$top.A_std)))/nel
 	C1 = (C1+sum(diag(m1$output$algebras$top.C_std)))/nel
 	E1 = (E1+sum(diag(m1$output$algebras$top.E_std)))/nel
-	A=c(A,A1)
-	C=c(C,C1)
-	E=c(E,E1)
-	r <- cbind(A,C,E)
-	write.table(r,"multivariate.txt", sep="\t", quote=F, append=T)
-	}
+	#A=c(A,A1)
+	#C=c(C,C1)
+	#E=c(E,E1)
+	r <- cbind(A1,C1,E1)
+	write.table(r,"multivariate.txt", sep="\t", quote=F, append=T, col.names=F, row.names=F)
+	
+}
 #})
 
 
