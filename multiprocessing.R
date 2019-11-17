@@ -31,10 +31,10 @@ C=c()
 E=c()
 n=10
 nel=2
-i<-1:n
-registerDoParallel(5)
-system.time({
-r <- foreach (i, .combine=rbind) %dopar%{
+#registerDoParallel(5)
+#system.time({
+#r <- foreach (i, .combine=rbind) %dopar%{
+for (i in 1:n){
 	ids <- sample(colnames(rois[,7:ncol(rois)-4]), size=nel, replace=F)
         selDVs=gsub('.{1}$','',ids)
         tmp = umx_residualize(selDVs, "age", suffixes = 1:2, rois) ## Adapt script to sex and age
@@ -48,10 +48,10 @@ r <- foreach (i, .combine=rbind) %dopar%{
 	A=c(A,A1)
 	C=c(C,C1)
 	E=c(E,E1)
-	cbind(A,C,E)
+	r <- cbind(A,C,E)
 	write.table(r,"multivariate.txt", sep="\t", quote=F, append=T)
 	}
-})
+#})
 
 
 #At=sum(A)/n
