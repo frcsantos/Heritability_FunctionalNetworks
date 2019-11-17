@@ -49,10 +49,10 @@ r <- foreach (i, .combine=rbind) %dopar%{
 	C=c(C,C1)
 	E=c(E,E1)
 	cbind(A,C,E)
+	write.table(r,"multivariate.txt", sep="\t", quote=F, append=T)
 	}
 })
 
-write.table(r,"multivariate.txt", sep="\t", quote=F)
 
 #At=sum(A)/n
 #Ct=sum(C)/n
