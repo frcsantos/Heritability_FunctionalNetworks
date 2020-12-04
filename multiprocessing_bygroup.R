@@ -6,7 +6,7 @@ library(foreach)
 library(doParallel)
 library(iterators)
 
-table<-read.csv("~/Fer/shen_268_parcellation_networklabels.csv", header=F)
+table<-read.csv("./shen_268_parcellation_networklabels.csv", header=F)
 
 table$V2 <- as.factor(table$V2)
 tipos <- levels(table$V2)
@@ -37,7 +37,7 @@ for (l in tipos)
 	{
 		for (k in ((j+1):dim(aux)[1]))
 		{
-		roi_ind <- c(roi_ind,paste("ROI",aux[j,1],aux[k,1],"T1", sep="_"))
+		roi_ind <- c(roi_ind,paste("ROI",aux[k,1],aux[j,1],"T1", sep="_"))
 		}
 	}
 	A1=0.0
@@ -46,7 +46,7 @@ for (l in tipos)
 	A=c()
 	C=c()
 	E=c()
-	n=5
+	n=494
 	nel=10
 	#registerDoParallel(5)
 	#system.time({
@@ -59,11 +59,12 @@ for (l in tipos)
 	        mzData <- as.data.frame(roi_resid[roi_resid$Zigosity=="MZ",])
 	        dzData <- as.data.frame(roi_resid[roi_resid$Zigosity=="DZ",])
 	        m1 = suppressMessages(umxACEv(selDVs = selDVs, sep = "", dzData = dzData, mzData = mzData))
-		A1 = (A1+sum(diag(m1$output$algebras$top.A_std)))/nel
-		C1 = (C1+sum(diag(m1$output$algebras$top.C_std)))/nel
-		E1 = (E1+sum(diag(m1$output$algebras$top.E_std)))/nel
+		A1 = sum(diag(m1$output$algebras$top.A_std))/nel
+		C1 = sum(diag(m1$output$algebras$top.C_std))/nel
+		E1 = sum(diag(m1$output$algebras$top.E_std))/nel
 		r <- cbind(A1,C1,E1)
-		print(l)
-		write.table(r, paste("multivariate_",l,sep=""), sep="\t", quote=F, append=T, col.names=F, row.names=F)
+		print(i)
+		write.table(r, paste("cmultivariate_",l,sep=""), sep="\t", quote=F, append=T, col.names=F, row.names=F)
 	}
 } 
+
