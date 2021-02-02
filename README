@@ -33,8 +33,27 @@ $docker push fesantos/herit
 ##Univariate analysis##
 
 #Make sure the doc final_table is available at the current directory (uncompressed) and RUN:
-$screen
 #Verify if you are at the same dir
-$docker run -u $(id -u):$(id -g) --rm -ti -v `pwd`:`pwd` -w `pwd` fesantos/herit Rscript processing.R
+docker run -u $(id -u):$(id -g) --rm -ti -v `pwd`:`pwd` -w `pwd` fesantos/herit Rscript processing.R
 
 
+##Multivariate analysis##
+#Fin data
+
+docker run -u $(id -u):$(id -g) --rm -ti -v `pwd`:`pwd` -w `pwd` fesantos/herit Rscript groupfin_null.R
+
+docker run -u $(id -u):$(id -g) --rm -ti -v `pwd`:`pwd` -w `pwd` fesantos/herit Rscript wbfin_null.R
+
+docker run -u $(id -u):$(id -g) --rm -ti -v `pwd`:`pwd` -w `pwd` fesantos/herit Rscript multiprocessing_bygroup_fin.R
+
+docker run -u $(id -u):$(id -g) --rm -ti -v `pwd`:`pwd` -w `pwd` fesantos/herit Rscript multiprocessing_fin.R
+
+#Gordon data
+
+docker run -u $(id -u):$(id -g) --rm -ti -v `pwd`:`pwd` -w `pwd` fesantos/herit Rscript groupgordon_null.R
+
+docker run -u $(id -u):$(id -g) --rm -ti -v `pwd`:`pwd` -w `pwd` fesantos/herit Rscript wbgordon_null.R
+
+docker run -u $(id -u):$(id -g) --rm -ti -v `pwd`:`pwd` -w `pwd` fesantos/herit	Rscript multiprocessing_bygroup_gordon.R
+
+docker run -u $(id -u):$(id -g) --rm -ti -v `pwd`:`pwd` -w `pwd` fesantos/herit Rscript	multiprocessing_gordon.R
