@@ -6,32 +6,32 @@ library(parallel)
 library(MASS)
 
 #Receiving processed table
-rois <- read_delim("./final_table_gordon", col_names=T, delim="\t")
+edges <- read_delim("./final_table_gordon", col_names=T, delim="\t")
 
-#Change sex to 0 and 1 ##
-rois <- mutate(rois, Gender = if_else(Gender=="M", 1, 0))
+#Change sex to 0 or 1 ##
+edges <- mutate(edges, Gender = if_else(Gender=="M", 1, 0))
 
 
 #Multiply all by 100
-rois[,7:dim(rois)[2]] <-  rois[,7:dim(rois)[2]]*100
+edges[,7:dim(edges)[2]] <-  edges[,7:dim(edges)[2]]*100
         
-#Eliminating sex and age influence
-roinames <- colnames(rois[,7:((length(colnames(rois))/2)+3)])
-rois$age1 = rois$age2 = rois$Age
-rois$gender1 = rois$gender2 = rois$Gender
+#Sex and age settings
+edgenames <- colnames(edges[,7:((length(colnames(edges))/2)+3)])
+edges$age1 = edges$age2 = edges$Age
+edges$gender1 = edges$gender2 = edges$Gender
 
 #Getting parameters  
 
 n=13000
 nel=10
 for (i in 1:n){
-	ids <- sample(colnames(rois[,7:ncol(rois)-4]), size=nel, replace=F)
-    selDVs=gsub('.{1}$','',ids)
-    tmp = umx_residualize(selDVs, "age", suffixes = 1:2, rois)				## Adapt script to sex and age
-    roi_resid = suppressWarnings(umx_residualize(selDVs, "gender", suffixes = 1:2, tmp))
-	roi_resid$Zigosity <- sample(roi_resid$Zigosity)					##Randomize twin types (mono and di)
-    mzData <- as.data.frame(roi_resid[roi_resid$Zigosity=="MZ",])
-    dzData <- as.data.frame(roi_resid[roi_resid$Zigosity=="DZ",])
+	selected_edges <- sample(colnames(edges[,7:ncol(edges)-4]), size=nel, replace=F)
+    selDVs=gsub('.{1}$','',selected_edges)
+    tmp = umx_residualize(selDVs, "age", suffixes = 1:2, edges)
+    edge_resid = suppressWarnings(umx_residualize(selDVs, "gender", suffixes = 1:2, tmp))
+	edge_resid$Zigosity <- sample(edge_resid$Zigosity)					##Randomize twin types (mono and di)
+    mzData <- as.data.frame(edge_resid[edge_resid$Zigosity=="MZ",])
+    dzData <- as.data.frame(edge_resid[edge_resid$Zigosity=="DZ",])
     m1 = suppressMessages(umxACEv(selDVs = selDVs, sep = "", dzData = dzData, mzData = mzData))
 	A1 = (sum(diag(m1$output$algebras$top.A_std)))/nel
 	C1 = (sum(diag(m1$output$algebras$top.C_std)))/nel
