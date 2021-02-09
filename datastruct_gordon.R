@@ -19,34 +19,34 @@ paths2 <- list.files("../../dados/Dados/Rest2", pattern="mat_conn_gordon_r2.csv"
 
 dataconstruct <- function(paths) {
   
-  rois <- data.frame(matrix(nrow= length(paths), ncol = 55278))
+  edges <- data.frame(matrix(nrow= length(paths), ncol = 55278))
   aux = 1
   cnames <- c()
   rnames <- c()
   
   for (i in paths){
     
-    roisline <- c()
-    roicor <- read.csv(i, header=F)
+    edgesline <- c()
+    edgecor <- read.csv(i, header=F)
     if (aux == 1){
-      for (c in (1 : (ncol(roicor)-1))) {
-        for (l in ((c+1) : ncol(roicor))) {
+      for (c in (1 : (ncol(edgecor)-1))) {
+        for (l in ((c+1) : ncol(edgecor))) {
           cnames <- c(cnames,paste("ROI", l, c, sep="_"))
         }
       }
-      colnames(rois) <- cnames
+      colnames(edges) <- cnames
     }
-    ind <- lower.tri(roicor, diag=FALSE) # Miraculous function for saving time
-    roisline <- roicor[ind]
+    ind <- lower.tri(edgecor, diag=FALSE) # Miraculous function for saving time
+    edgesline <- edgecor[ind]
     rnames <- c(rnames, strsplit(i,"/")[[1]][7])
-    rois[aux,] <- roisline
+    edges[aux,] <- edgesline
     aux=aux+1
     print (i)
   }
-  rownames(rois)<-rnames
+  rownames(edges)<-rnames
   
-  final_tmp2 <- merge(final_tmp, rois, by.x="Subject_T1", by.y=0)
-  final <- merge(final_tmp2, rois, by.x="Subject_T2", by.y=0)
+  final_tmp2 <- merge(final_tmp, edges, by.x="Subject_T1", by.y=0)
+  final <- merge(final_tmp2, edges, by.x="Subject_T2", by.y=0)
   colnames(final) <- sub ("\\.x", "_T1", colnames(final))
   colnames(final) <- sub ("\\.y", "_T2", colnames(final))
   return(final)
