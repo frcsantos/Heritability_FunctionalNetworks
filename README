@@ -11,6 +11,8 @@ Requires:
 #Pre-processing tasks#
 ######################
 
+#Preprocessing branch
+
 1. Remove extra stats table in each sheet from Demographics.xlsx
 
 For preprocessing, run:
@@ -23,6 +25,7 @@ $docker run -u $(id -u):$(id -g) --rm -ti -v `pwd`:`pwd` -w `pwd` fesantos/herit
 #Processing#
 ############
 
+#Master branch
 
 Test if docker image fesantos/herit is available
 $docker images | grep "fesantos/herit"
