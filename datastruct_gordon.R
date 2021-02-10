@@ -1,9 +1,9 @@
 library("xlsx")
 library("tidyverse")
 
-Mz <- read.xlsx("../../dados/Dados/Demographics.xlsx", 1, header = T)
-Dz <- read.xlsx("../../dados/Dados/Demographics.xlsx", 2, header = T)
-pairing <- read.xlsx("../../dados/Dados/List_twin_pairs.xlsx", 1, header = F)
+Mz <- read.xlsx("Demographics.xlsx", 1, header = T)
+Dz <- read.xlsx("Demographics.xlsx", 2, header = T)
+pairing <- read.xlsx("List_twin_pairs.xlsx", 1, header = F)
 
 #columns: FAMID, Zigozity, ROI1-2_T1, ROI1-2_T2, ROI1-3_T1, ROI1-3_T2....SEX (1:MALE, 0:FEMALE), AGE
 
@@ -14,8 +14,8 @@ final_tmp<-distinct(merged, Family_ID, .keep_all=T)
 colnames(final_tmp) <- c("Subject_T1", "Subject_T2", "Zigosity","Family_ID","Gender","Age")
 
 
-paths1 <- list.files("../../dados/Dados/Rest1", pattern="mat_conn_gordon_r1.csv", recursive=T, full.names=T)
-paths2 <- list.files("../../dados/Dados/Rest2", pattern="mat_conn_gordon_r2.csv", recursive=T, full.names=T)
+paths1 <- list.files("Rest1", pattern="mat_conn_gordon_r1.csv", recursive=T, full.names=T)
+paths2 <- list.files("Rest2", pattern="mat_conn_gordon_r2.csv", recursive=T, full.names=T)
 
 dataconstruct <- function(paths) {
   
@@ -36,7 +36,7 @@ dataconstruct <- function(paths) {
       }
       colnames(edges) <- cnames
     }
-    ind <- lower.tri(edgecor, diag=FALSE) # Miraculous function for saving time
+    ind <- lower.tri(edgecor, diag=FALSE) e
     edgesline <- edgecor[ind]
     rnames <- c(rnames, strsplit(i,"/")[[1]][7])
     edges[aux,] <- edgesline
